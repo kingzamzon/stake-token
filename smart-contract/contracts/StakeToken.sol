@@ -21,7 +21,7 @@ contract StakeToken is ERC20, Ownable, ReentrancyGuard {
     uint256 public rewardRate = 0;
 
     /// @notice Duration of the reward distribution
-    uint256 public rewardsDuration = 7 days;
+    uint256 public rewardsDuration = 1 minutes;
 
     /// @notice Last time `rewardPerTokenStored` was updated
     uint256 public lastUpdateTime;
@@ -198,6 +198,18 @@ contract StakeToken is ERC20, Ownable, ReentrancyGuard {
             _totalStakes = _totalStakes.add(stakes[stakeholders[s]]);
         }
         return _totalStakes;
+    }
+
+    /**
+     * @notice A method to the aggregated stakes from all stakeholders.
+     * @return uint256 The aggregated stakes from all stakeholders.
+     */
+    function totalStakeHolders()
+        public
+        view
+        returns(uint256)
+    {
+        return stakeholders.length;
     }
 
     // ---------- STAKEHOLDERS ----------
