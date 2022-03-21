@@ -96,11 +96,11 @@ export default function Home() {
       );
       // call the numAddressesWhitelisted from the contract
       // const _numberOfStakers = await whitelistContract.tokenPerEth();
-      let _numberOfStakers = await whitelistContract.totalStakes();
-      // _numberOfStakers = ethers.utils.formatUnits(_numberOfStakers, 6);
-      _numberOfStakers = ethers.utils.formatEther(_numberOfStakers);
+      let _numberOfStakers = await whitelistContract.totalStakeHolders();
+      _numberOfStakers = ethers.utils.formatUnits(_numberOfStakers, 0);
+      // _numberOfStakers = ethers.utils.formatEther(_numberOfStakers);
       console.log(_numberOfStakers)
-      // setNumberOfStaked(_numberOfStakers);
+      setNumberOfStaked(_numberOfStakers);
     } catch (err) {
       console.error(err);
     }
