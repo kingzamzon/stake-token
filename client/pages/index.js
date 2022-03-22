@@ -14,6 +14,10 @@ export default function Home() {
   const [stakeHolder, setstakeHolder] = useState(false);
   // loading is set to true when we are waiting for a transaction to get mined
   const [loading, setLoading] = useState(false);
+  // total token owe by signer
+  const [userTokenTotal, setUserTokenTotal] = useState(0);
+  // total token staked by signer
+  const [numberOfUserStakedToken, setNumberOfUserStakedToken] = useState(0);
   // totalStakes tracks the number of addresses's whitelisted
   const [numberOfStaked, setNumberOfStaked] = useState(0);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
@@ -106,6 +110,68 @@ export default function Home() {
     }
   };
 
+    /**
+   * getNumberOfWhitelisted:  gets the number of whitelisted addresses
+   */
+     const getSignerTotalToken = async () => {
+      try {
+        // Get the provider from web3Modal, which in our case is MetaMask
+        // No need for the Signer here, as we are only reading state from the blockchain
+        // const provider = await getProviderOrSigner();
+        const signer = await getProviderOrSigner(true);
+        // We connect to the Contract using a Provider, so we will only
+        // have read-only access to the Contract
+        const whitelistContract = new Contract(
+          STAKING_CONTRACT_ADDRESS,
+          abi,
+          signer
+        );
+
+        // Get the address associated to the signer which is connected to  MetaMask
+      const address = await signer.getAddress();
+      // call the numAddressesWhitelisted from the contract
+        // const _numberOfStakers = await whitelistContract.tokenPerEth();
+        let _numberOfUserToken = await whitelistContract.balanceOf(address);
+        _numberOfUserToken = ethers.utils.formatUnits(_numberOfUserToken, 0);
+        // _numberOfUserToken = ethers.utils.formatEther(_numberOfUserToken);
+        console.log(_numberOfUserToken)
+        setUserTokenTotal(_numberOfUserToken);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+        /**
+   * getNumberOfWhitelisted:  gets the number of whitelisted addresses
+   */
+      const getSignerTotalStaked = async () => {
+      try {
+        // Get the provider from web3Modal, which in our case is MetaMask
+        // No need for the Signer here, as we are only reading state from the blockchain
+        // const provider = await getProviderOrSigner();
+        const signer = await getProviderOrSigner(true);
+        // We connect to the Contract using a Provider, so we will only
+        // have read-only access to the Contract
+        const whitelistContract = new Contract(
+          STAKING_CONTRACT_ADDRESS,
+          abi,
+          signer
+        );
+
+        // Get the address associated to the signer which is connected to  MetaMask
+      const address = await signer.getAddress();
+      // call the numAddressesWhitelisted from the contract
+        // const _numberOfStakers = await whitelistContract.tokenPerEth();
+        let _numberOfUserToken = await whitelistContract.stakeOf(address);
+        _numberOfUserToken = ethers.utils.formatUnits(_numberOfUserToken, 0);
+        // _numberOfUserToken = ethers.utils.formatEther(_numberOfUserToken);
+        console.log(_numberOfUserToken)
+        setNumberOfUserStakedToken(_numberOfUserToken);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
   /**
    * checkIfAddressInWhitelist: Checks if the address is in whitelist
    */
@@ -144,6 +210,8 @@ export default function Home() {
   
         checkIfAddressInWhitelist();
         getNumberOfWhitelisted();
+        getSignerTotalToken();
+        getSignerTotalStaked();
       } catch (err) {
         console.error(err);
       }
@@ -209,7 +277,9 @@ export default function Home() {
             Its an NFT collection for developers in Crypto.
           </div>
           <div className={styles.description}>
-            {numberOfStaked} have already joined the Whitelist
+            {numberOfStaked} People already staked. <br />
+            Token Staked: {numberOfUserStakedToken} SRC. <br />
+            Token Balance: {userTokenTotal} SRC.
           </div>
           {renderButton()}
         </div>
