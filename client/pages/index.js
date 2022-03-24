@@ -22,6 +22,10 @@ export default function Home() {
   const [numberOfStaked, setNumberOfStaked] = useState(0);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
   const web3ModalRef = useRef();
+  // store amount of token user want to buy in local state
+  const [tokenAmount, setTokenAmountValue] = useState(0);
+   // store stake amount in local state
+   const [stakeAmount, setStakeAmountValue] = useState(0);
 
    /**
    * Returns a Provider or Signer object representing the Ethereum RPC with or without the
@@ -133,8 +137,9 @@ export default function Home() {
         // const _numberOfStakers = await whitelistContract.tokenPerEth();
         let _numberOfUserToken = await whitelistContract.balanceOf(address);
         _numberOfUserToken = ethers.utils.formatUnits(_numberOfUserToken, 0);
+        // _numberOfUserToken = _numberOfUserToken.toNumber();
         // _numberOfUserToken = ethers.utils.formatEther(_numberOfUserToken);
-        console.log(_numberOfUserToken)
+        console.log("hey hey",_numberOfUserToken)
         setUserTokenTotal(_numberOfUserToken);
       } catch (err) {
         console.error(err);
@@ -198,6 +203,28 @@ export default function Home() {
     }
   };
 
+  /**
+   * Buy token
+   */
+  const buyToken = async () => {
+    try {
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /**
+   * stake token
+   */
+   const stakeToken = async () => {
+    try {
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   /*
     connectWallet: Connects the MetaMask wallet
   */
@@ -225,7 +252,7 @@ export default function Home() {
       if (stakeHolder) {
         return (
           <div className={styles.description}>
-            Thanks for joining the Whitelist!
+            Thanks for joining staking earlier
           </div>
         );
       } else if (loading) {
@@ -245,6 +272,38 @@ export default function Home() {
       );
     }
   };
+
+  /**
+   * Render stake or buy token div
+   */
+  const rederStakeBuyTokenDiv = () => {
+    if (walletConnected) {
+      return(
+      <div className={styles.flex_container}>
+        <div>
+            <h4> Buy Token </h4>
+            <input
+              type="number"
+              onChange={(e) => setTokenAmountValue(e.target.value)} placeholder="Amount"
+            /> <br />
+            <button className="waveButton" onClick={buyToken}>
+              Buy Token
+            </button>
+        </div>
+        <div>
+          <h4> Stake Token </h4>
+          <input
+              type="number"
+              onChange={(e) => setStakeAmountValue(e.target.value)} placeholder="Amount"
+            /> <br />
+            <button className="waveButton" onClick={stakeToken}>
+              Stake Token
+            </button>
+        </div>
+      </div>
+      );
+    }
+  }
 
   // useEffects are used to react to changes in state of the website
   // The array at the end of function call represents what state changes will trigger this effect
@@ -272,16 +331,14 @@ export default function Home() {
       </Head>
       <div className={styles.main}>
         <div>
-          <h1 className={styles.title}>Welcome to Crypto Devs!</h1>
+          <h1 className={styles.title}>Welcome to SRC Token</h1>
           <div className={styles.description}>
-            Its an NFT collection for developers in Crypto.
-          </div>
-          <div className={styles.description}>
-            {numberOfStaked} People already staked. <br />
+            Total Stakers: {numberOfStaked} Stakers. <br />
             Token Staked: {numberOfUserStakedToken} SRC. <br />
             Token Balance: {userTokenTotal} SRC.
           </div>
           {renderButton()}
+          {rederStakeBuyTokenDiv()}
         </div>
       </div>
     </div>

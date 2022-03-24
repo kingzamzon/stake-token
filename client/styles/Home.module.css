@@ -114,3 +114,17 @@
     flex-direction: column;
   }
 }
+
+
+.flex_container {
+  display: flex;
+  background-color: DodgerBlue;
+}
+
+.flex_container > div {
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 10px;
+  font-size: 20px;
+  flex-grow: 1;
+}
